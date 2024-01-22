@@ -247,9 +247,15 @@ def create_workers_and_execute(definitions: List[Definition], args: argparse.Nam
         raise Exception(
             f"Batch mode uses all available CPU resources, --parallelism should be set to 1. (Was: {args.parallelism})"
         )
-
+    
+    # The purpose of this code is typically seen in parallel processing scenarios, where you might have multiple worker processes that need to process tasks concurrently. 
+    # The task_queue acts as a shared resource where these tasks are stored. Worker processes can then retrieve and process tasks from this queue. 
+    # This is a common pattern in Python for dividing work among multiple processes, especially when the tasks are independent and can be executed in parallel. 
+    # The multiprocessing.Queue is especially useful in such scenarios because it is designed to be safe for use by multiple processes, 
+    # ensuring that the internal data structures are not corrupted by concurrent accesses.
     task_queue = multiprocessing.Queue()
     for definition in definitions:
+        
         task_queue.put(definition)
 
     try:
