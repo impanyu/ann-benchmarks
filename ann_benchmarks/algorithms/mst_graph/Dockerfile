@@ -16,9 +16,10 @@ RUN pip3 install build
 RUN git clone https://github.com/impanyu/high_order_DiskANN.git
 WORKDIR high_order_DiskANN
 RUN python3 -m build
-WORKDIR ..
+
 
 
 RUN pip3 install dist/diskannpy-0.7.0rc2-cp310-cp310-linux_x86_64.whl
 
 RUN python3 -c 'import diskannpy'
+WORKDIR ..
