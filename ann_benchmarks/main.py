@@ -320,7 +320,7 @@ def main():
         distance_metric=dataset.attrs["distance"],
         count=args.count
     )
-    print(definitions)
+   
     random.shuffle(definitions)
 
     definitions = filter_already_run_definitions(definitions, 
@@ -333,6 +333,8 @@ def main():
     if args.algorithm:
         logger.info(f"running only {args.algorithm}")
         definitions = [d for d in definitions if d.algorithm == args.algorithm]
+
+    print(definitions)
 
     if not args.local:
         definitions = filter_by_available_docker_images(definitions)
