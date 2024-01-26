@@ -334,7 +334,7 @@ def main():
         logger.info(f"running only {args.algorithm}")
         definitions = [d for d in definitions if d.algorithm == args.algorithm]
 
-    print(definitions)
+    #print(definitions)
 
     if not args.local:
         definitions = filter_by_available_docker_images(definitions)
