@@ -74,7 +74,7 @@ float:
     disabled: false
     docker_tag: ann-benchmarks-mst_graph
     module: ann_benchmarks.algorithms.mst_graph
-    name: mst-graph
+    name: mst_graph
     run_groups:
       vamana_100_64_[1,1,1,1]:
         args: [{alphas: [1,1,1,1],  l_build: 100, max_outdegree: 64}]
