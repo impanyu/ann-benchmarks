@@ -320,6 +320,7 @@ def main():
         distance_metric=dataset.attrs["distance"],
         count=args.count
     )
+    print(definitions)
     random.shuffle(definitions)
 
     definitions = filter_already_run_definitions(definitions, 
