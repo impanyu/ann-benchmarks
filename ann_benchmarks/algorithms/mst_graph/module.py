@@ -127,9 +127,9 @@ class MST_Graph(BaseANN):
             s = time.time()
             if self.metric == "l2":
                 #index = vp.SinglePrecisionIndex(vp.Metric.FAST_L2, data_path)
-                index = self.build(self.metric, "float", self.alphas, index_dir, data_path,self.l_build, self.max_outdegree, self.num_threads, self.name)
+                self.index = self.build(self.metric, "float", self.alphas, index_dir, data_path,self.l_build, self.max_outdegree, self.num_threads, self.name)
             elif self.metric == "cosine":
-                index = self.build(self.metric, "float", self.alphas, index_dir, data_path,self.l_build, self.max_outdegree, self.num_threads, self.name)
+                self.index = self.build(self.metric, "float", self.alphas, index_dir, data_path,self.l_build, self.max_outdegree, self.num_threads, self.name)
           
             else:
                 print("MST-Graph: Unknown Metric Error!")
@@ -144,9 +144,9 @@ class MST_Graph(BaseANN):
             print("MST-Graph: Loading Index: " + str(save_path))
             s = time.time()
             if self.metric == "l2":
-                index = StaticMemoryIndex(distance_metric=self.metric,vector_dtype="float",index_directory=index_dir, num_threads=self.num_threads, initial_search_complexity=self.l_build,index_prefix=self.name)
+                self.index = StaticMemoryIndex(distance_metric=self.metric,vector_dtype="float",index_directory=index_dir, num_threads=self.num_threads, initial_search_complexity=self.l_build,index_prefix=self.name)
             elif self.metric == "cosine":
-                index = StaticMemoryIndex(distance_metric=self.metric,vector_dtype="float",index_directory=index_dir, num_threads=self.num_threads, initial_search_complexity=self.l_build,index_prefix=self.name)
+                self.index = StaticMemoryIndex(distance_metric=self.metric,vector_dtype="float",index_directory=index_dir, num_threads=self.num_threads, initial_search_complexity=self.l_build,index_prefix=self.name)
             else:
                 print("MST-Graph: Unknown Metric Error!")
             #self.index.load(file_name=save_path)
