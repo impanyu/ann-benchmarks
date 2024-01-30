@@ -160,6 +160,34 @@ def load_and_transform_dataset(dataset_name: str) -> Tuple[
     print(f"Got {len(X_test)} queries")
 
     train, test = dataset_transform(D)
+    n_train = len(train)
+    n_test = len(test)
+    if n_train > 500000:
+        # Calculate 1% of the number of elements
+        n_train_1_percent = int(0.01 * n_train)
+        n_test_1_percent = int(0.01 * n_test)
+        # Randomly select 1% of elements from the train dataset
+        new_train_indices = numpy.random.choice(n_train, n_train_1_percent, replace=False)
+        new_train = train[new_train_indices]  
+        # Create a set of tuples from new_train for faster lookup
+        new_train_set = set(map(tuple, new_train))
+
+        # Filter the test set to only include elements present in the new train set
+        filtered_test = numpy.array([item for item in test if tuple(item) in new_train_set])
+
+        # Randomly select elements from the filtered test set
+        # Note: The number of elements selected is the minimum between n_test_1_percent and the length of the filtered_test
+        new_test_indices = numpy.random.choice(len(filtered_test), min(n_test_1_percent, len(filtered_test)), replace=False)
+        new_test = filtered_test[new_test_indices]
+
+        train=new_train
+        test=new_test
+
+# new_train and new_test are now the required subsets
+
+
+
+
     return train, test, distance
 
 
