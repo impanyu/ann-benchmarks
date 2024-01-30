@@ -165,7 +165,7 @@ class MST_Graph(BaseANN):
         self.l_search = l_search
 
     def query(self, v, n):
-        return self.index.search(v, n, self.l_search)
+        return self.index.search(v, n, self.l_search).identifiers
 
     def batch_query(self, X, n):
         self.num_queries = X.shape[0]
