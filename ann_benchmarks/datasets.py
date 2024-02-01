@@ -6,6 +6,7 @@ from urllib.request import urlopen, urlretrieve
 import h5py
 import numpy
 from typing import Any, Callable, Dict, Tuple
+import os
 
 def download(source_url: str, destination_path: str) -> None:
     """
@@ -35,6 +36,20 @@ def get_dataset_fn(dataset_name: str) -> str:
         os.mkdir("data")
     return os.path.join("data", f"{dataset_name}.hdf5")
 
+def get_dataset_fn_copy(dataset_name: str) -> str:
+    """
+    Returns the full file path for a given dataset name in the data directory.
+    
+    Args:
+        dataset_name (str): The name of the dataset.
+    
+    Returns:
+        str: The full file path of the dataset.
+    """
+    if not os.path.exists("data"):
+        os.mkdir("data")
+    return os.path.join("data", f"{dataset_name}.copy.hdf5")
+
 def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
     """
     Fetches a dataset by downloading it from a known URL or creating it locally
@@ -49,19 +64,7 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
             the dimension of the dataset.
     """
     hdf5_filename = get_dataset_fn(dataset_name)
-
-    dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
-    download(dataset_url, hdf5_filename)
-       
-    with h5py.File(hdf5_filename, "r") as hdf5_file:
-        
-        train = numpy.array(hdf5_file["train"])
-        test = numpy.array(hdf5_file["test"])
-        #point_type = hdf5_file.attrs["point_type"]
-        distance = hdf5_file.attrs["distance"]
-    
-    write_output(train, test, hdf5_filename+"d", distance)
-    hdf5_file = h5py.File(hdf5_filename, "r")   
+    hdf5_filename_copy = get_dataset_fn_copy(dataset_name)
 
  
     try:
@@ -69,12 +72,19 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
         download(dataset_url, hdf5_filename)
         
         with h5py.File(hdf5_filename, "r") as hdf5_file:
-            dimension = hdf5_file.attrs["dimension"]
+            
             train = numpy.array(hdf5_file["train"])
             test = numpy.array(hdf5_file["test"])
-            point_type = hdf5_file.attrs["point_type"]
+            
             distance = hdf5_file.attrs["distance"]
-        write_output(train, test, hdf5_filename, distance, point_type)
+
+        write_output(train, test, hdf5_filename_copy, distance)
+        # Move the file (equivalent to mv in Unix)
+        try:
+            os.rename(hdf5_filename_copy, hdf5_filename)
+        except OSError as e:
+            print(f"Error moving file: {e}")
+
         hdf5_file = h5py.File(hdf5_filename, "r")            
     except:
         print(f"Cannot download {dataset_url}")
