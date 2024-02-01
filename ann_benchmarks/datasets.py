@@ -53,7 +53,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     try:
         dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
         download(dataset_url, hdf5_filename)
-
+        '''
         with h5py.File(hdf5_filename, "r") as hdf5_file:
             X_train = hdf5_file["train"]
             X_test = hdf5_file["test"]
@@ -61,6 +61,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
 
         write_output(numpy.array(X_train), numpy.array(X_test), hdf5_filename, distance)
         hdf5_file = h5py.File(hdf5_filename, "r")
+        '''
     except:
         print(f"Cannot download {dataset_url}")
         if dataset_name in DATASETS:
