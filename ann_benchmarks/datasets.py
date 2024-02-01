@@ -54,6 +54,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     download(dataset_url, hdf5_filename)
     
     f = h5py.File(hdf5_filename, "r+", libver='latest', swmr=True)
+    f.swmr_mode = True
     train = f["train"]
     test = f["test"]
     count = 100
