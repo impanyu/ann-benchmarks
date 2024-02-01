@@ -94,7 +94,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
             each point in the test set. Defaults to 100.
     """
     from ann_benchmarks.algorithms.bruteforce.module import BruteForceBLAS
-    
+    '''
     n_train = len(train)
 
     
@@ -112,7 +112,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
 
     train=new_train
     test=new_test
-
+    '''
 
 
     with h5py.File(fn, "w") as f:
