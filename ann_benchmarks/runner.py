@@ -14,7 +14,7 @@ import psutil
 from ann_benchmarks.algorithms.base.module import BaseANN
 
 from .definitions import Definition, instantiate_algorithm
-from .datasets import DATASETS, get_dataset
+from .datasets import DATASETS, get_dataset, get_dataset_outside_docker
 from .distance import dataset_transform, metrics
 from .results import store_results
 
@@ -321,6 +321,8 @@ def run_docker(
     client = docker.from_env()
     if mem_limit is None:
         mem_limit = psutil.virtual_memory().available
+    
+    get_dataset_outside_docker(dataset)
 
     container = client.containers.run(
         definition.docker_tag,

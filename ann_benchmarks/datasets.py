@@ -35,6 +35,47 @@ def get_dataset_fn(dataset_name: str) -> str:
         os.mkdir("data")
     return os.path.join("data", f"{dataset_name}.hdf5")
 
+def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
+    """
+    Fetches a dataset by downloading it from a known URL or creating it locally
+    if it's not already present. The dataset file is then opened for reading, 
+    and the file handle and the dimension of the dataset are returned.
+    
+    Args:
+        dataset_name (str): The name of the dataset.
+    
+    Returns:
+        Tuple[h5py.File, int]: A tuple containing the opened HDF5 file object and
+            the dimension of the dataset.
+    """
+    hdf5_filename = get_dataset_fn(dataset_name)
+
+ 
+    try:
+        dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
+        download(dataset_url, hdf5_filename)
+        
+        with h5py.File(hdf5_filename, "r") as hdf5_file:
+            dimension = hdf5_file.attrs["dimension"]
+            train = numpy.array(hdf5_file["train"])
+            test = numpy.array(hdf5_file["test"])
+            point_type = hdf5_file.attrs["point_type"]
+            distance = hdf5_file.attrs["distance"]
+        write_output(train, test, hdf5_filename, distance, point_type)
+        hdf5_file = h5py.File(hdf5_filename, "r")            
+    except:
+        print(f"Cannot download {dataset_url}")
+        if dataset_name in DATASETS:
+            print("Creating dataset locally")
+            DATASETS[dataset_name](hdf5_filename)
+
+        hdf5_file = h5py.File(hdf5_filename, "r")
+
+    
+    # here for backward compatibility, to ensure old datasets can still be used with newer versions
+    # cast to integer because the json parser (later on) cannot interpret numpy integers
+    dimension = int(hdf5_file.attrs["dimension"]) if "dimension" in hdf5_file.attrs else len(hdf5_file["train"][0])
+    return hdf5_file, dimension
 
 def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     """
@@ -50,106 +91,13 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
             the dimension of the dataset.
     """
     hdf5_filename = get_dataset_fn(dataset_name)
-    dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
-    download(dataset_url, hdf5_filename)
-    
-    f = h5py.File(hdf5_filename, "r+", libver='latest', swmr=True)
-    f.swmr_mode = True
-    train = f["train"]
-    test = f["test"]
-    count = 100
-    distance = f.attrs["distance"] 
 
-    n_train = len(train)
-    new_train_size = 10000
-    new_test_size = int(0.1 * new_train_size)
-    # Randomly select new_train_size of elements from the train dataset
-    new_train_indices = numpy.random.choice(n_train, new_train_size, replace=False)
-    new_train_indices = numpy.sort(new_train_indices)
-    new_train = train[new_train_indices]  
-    
-    # Randomly select elements from the new_train
-    # Note: The number of elements selected is the minimum between n_test_1_percent and the length of the filtered_test
-    new_test_indices = numpy.random.choice(len(new_train),new_test_size, replace=False)
-    new_test = new_train[new_test_indices]
-
-    train=new_train
-    test=new_test
-    
-
-    neighbors_ds = f["neighbors"]
-    distances_ds = f["distances"]
-
-    from ann_benchmarks.algorithms.bruteforce.module import BruteForceBLAS
-
-    # Fit the brute-force k-NN model
-    bf = BruteForceBLAS(distance, precision=train.dtype)
-    bf.fit(train)
-
-    for i, x in enumerate(test):
-        if i % 1000 == 0:
-            print(f"{i}/{len(test)}...")
-
-        # Query the model and sort results by distance
-        res = list(bf.query_with_distances(x, count))
-        res.sort(key=lambda t: t[-1])
-
-        # Save neighbors indices and distances
-        neighbors_ds[i] = [idx for idx, _ in res]
-        distances_ds[i] = [dist for _, dist in res]
-    hdf5_file = f
-
-
-
-    '''
+ 
     try:
         dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
         download(dataset_url, hdf5_filename)
         
-        f = h5py.File(hdf5_filename, "r+")
-        train = f["train"]
-        test = f["test"]
-        count = 100
-        distance = f.attrs["distance"] 
-
-        n_train = len(train)
-        new_train_size = 10000
-        new_test_size = int(0.1 * new_train_size)
-        # Randomly select new_train_size of elements from the train dataset
-        new_train_indices = numpy.random.choice(n_train, new_train_size, replace=False)
-        new_train = train[new_train_indices]  
-        
-        # Randomly select elements from the new_train
-        # Note: The number of elements selected is the minimum between n_test_1_percent and the length of the filtered_test
-        new_test_indices = numpy.random.choice(len(new_train),new_test_size, replace=False)
-        new_test = new_train[new_test_indices]
-
-        train=new_train
-        test=new_test
-      
-
-        neighbors_ds = f["neighbors"]
-        distances_ds = f["distances"]
-
-        from ann_benchmarks.algorithms.bruteforce.module import BruteForceBLAS
-
-        # Fit the brute-force k-NN model
-        bf = BruteForceBLAS(distance, precision=train.dtype)
-        bf.fit(train)
-
-        for i, x in enumerate(test):
-            if i % 1000 == 0:
-                print(f"{i}/{len(test)}...")
-
-            # Query the model and sort results by distance
-            res = list(bf.query_with_distances(x, count))
-            res.sort(key=lambda t: t[-1])
-
-            # Save neighbors indices and distances
-            neighbors_ds[i] = [idx for idx, _ in res]
-            distances_ds[i] = [dist for _, dist in res]
-        hdf5_file = f
-            
+        hdf5_file = h5py.File(hdf5_filename, "r")            
     except:
         print(f"Cannot download {dataset_url}")
         if dataset_name in DATASETS:
@@ -158,7 +106,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
 
         hdf5_file = h5py.File(hdf5_filename, "r")
 
-    '''
+    
     # here for backward compatibility, to ensure old datasets can still be used with newer versions
     # cast to integer because the json parser (later on) cannot interpret numpy integers
     dimension = int(hdf5_file.attrs["dimension"]) if "dimension" in hdf5_file.attrs else len(hdf5_file["train"][0])
@@ -190,11 +138,13 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
     new_test_size = int(0.1 * new_train_size)
     # Randomly select new_train_size of elements from the train dataset
     new_train_indices = numpy.random.choice(n_train, new_train_size, replace=False)
+    new_train_indices = numpy.sort(new_train_indices)
     new_train = train[new_train_indices]  
     
     # Randomly select elements from the new_train
     # Note: The number of elements selected is the minimum between n_test_1_percent and the length of the filtered_test
     new_test_indices = numpy.random.choice(len(new_train),new_test_size, replace=False)
+    new_test_indices = numpy.sort(new_test_indices)
     new_test = new_train[new_test_indices]
 
     train=new_train
