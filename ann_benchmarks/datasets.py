@@ -49,6 +49,17 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
             the dimension of the dataset.
     """
     hdf5_filename = get_dataset_fn(dataset_name)
+    dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
+    download(dataset_url, hdf5_filename)
+        
+    with h5py.File(hdf5_filename, "r") as hdf5_file:
+        dimension = hdf5_file.attrs["dimension"]
+        train = numpy.array(hdf5_file["train"])
+        test = numpy.array(hdf5_file["test"])
+        point_type = hdf5_file.attrs["point_type"]
+        distance = hdf5_file.attrs["distance"]
+    write_output(train, test, hdf5_filename, distance, point_type)
+    hdf5_file = h5py.File(hdf5_filename, "r")   
 
  
     try:
