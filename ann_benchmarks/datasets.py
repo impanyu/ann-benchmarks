@@ -50,6 +50,22 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
             the dimension of the dataset.
     """
     hdf5_filename = get_dataset_fn(dataset_name)
+    dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
+    download(dataset_url, hdf5_filename)
+    
+    with h5py.File(hdf5_filename, "r") as hdf5_file:
+        X_train = hdf5_file["train"]
+        X_test = hdf5_file["test"]
+        distance = hdf5_file.attrs["distance"]
+        point_type = hdf5_file.attrs["point_type"] if "point_type" in hdf5_file.attrs else "float"
+    
+    write_output(numpy.array(X_train), numpy.array(X_test), hdf5_filename, distance,point_type)
+    
+    hdf5_file = h5py.File(hdf5_filename, "r")
+
+
+
+    '''
     try:
         dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
         download(dataset_url, hdf5_filename)
@@ -71,7 +87,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
             DATASETS[dataset_name](hdf5_filename)
 
         hdf5_file = h5py.File(hdf5_filename, "r")
-
+    '''
     # here for backward compatibility, to ensure old datasets can still be used with newer versions
     # cast to integer because the json parser (later on) cannot interpret numpy integers
     dimension = int(hdf5_file.attrs["dimension"]) if "dimension" in hdf5_file.attrs else len(hdf5_file["train"][0])
@@ -94,7 +110,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
             each point in the test set. Defaults to 100.
     """
     from ann_benchmarks.algorithms.bruteforce.module import BruteForceBLAS
-    '''
+    
     n_train = len(train)
 
     
@@ -112,7 +128,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
 
     train=new_train
     test=new_test
-    '''
+  
 
 
     with h5py.File(fn, "w") as f:
