@@ -53,7 +53,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
     download(dataset_url, hdf5_filename)
     
-    f = h5py.File(hdf5_filename, "r+")
+    f = h5py.File(hdf5_filename, "r+", libver='latest', swmr=True)
     train = f["train"]
     test = f["test"]
     count = 100
