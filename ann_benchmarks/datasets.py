@@ -54,6 +54,8 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     download(dataset_url, hdf5_filename)
     
     with h5py.File(hdf5_filename, "r") as hdf5_file:
+        for key in hdf5_file.keys():
+            print(key)  # Prints the names of groups/datasets in the file
         X_train = hdf5_file["train"]
         X_test = hdf5_file["test"]
         distance = hdf5_file.attrs["distance"]
