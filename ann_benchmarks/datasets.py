@@ -58,9 +58,10 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
             X_train = hdf5_file["train"]
             X_test = hdf5_file["test"]
             distance = hdf5_file.attrs["distance"]
-        '''
-        write_output(numpy.array(X_train), numpy.array(X_test), hdf5_filename, distance)
-        '''
+            point_type = hdf5_file.attrs["point_type"] if "point_type" in hdf5_file.attrs else "float"
+        
+        write_output(numpy.array(X_train), numpy.array(X_test), hdf5_filename, distance,point_type)
+       
         hdf5_file = h5py.File(hdf5_filename, "r")
         
     except:
@@ -95,7 +96,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
     from ann_benchmarks.algorithms.bruteforce.module import BruteForceBLAS
     
     n_train = len(train)
-    n_test = len(test)
+
     
    
     new_train_size = 10000
