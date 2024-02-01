@@ -53,7 +53,7 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
     download(dataset_url, hdf5_filename)
         
     with h5py.File(hdf5_filename, "r") as hdf5_file:
-        dimension = hdf5_file.attrs["dimension"]
+        
         train = numpy.array(hdf5_file["train"])
         test = numpy.array(hdf5_file["test"])
         point_type = hdf5_file.attrs["point_type"]
