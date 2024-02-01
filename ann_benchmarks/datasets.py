@@ -59,7 +59,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
         distance = hdf5_file.attrs["distance"]
         point_type = hdf5_file.attrs["point_type"] if "point_type" in hdf5_file.attrs else "float"
     
-    write_output(numpy.array(X_train), numpy.array(X_test), hdf5_filename, distance,point_type)
+    write_output(X_train, X_test, hdf5_filename, distance,point_type)
     
     hdf5_file = h5py.File(hdf5_filename, "r")
 
