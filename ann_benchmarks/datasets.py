@@ -64,6 +64,7 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     new_test_size = int(0.1 * new_train_size)
     # Randomly select new_train_size of elements from the train dataset
     new_train_indices = numpy.random.choice(n_train, new_train_size, replace=False)
+    new_train_indices = numpy.sort(new_train_indices)
     new_train = train[new_train_indices]  
     
     # Randomly select elements from the new_train
