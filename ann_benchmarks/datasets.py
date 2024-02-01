@@ -53,13 +53,20 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
     try:
         dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
         download(dataset_url, hdf5_filename)
+
+        hdf5_file = h5py.File(hdf5_filename, "r")
+        X_train = hdf5_file["train"]
+        X_test = hdf5_file["test"]
+        distance = hdf5_file.attrs["distance"]
+
+        write_output(numpy.array(X_train), numpy.array(X_test), hdf5_filename, distance)
     except:
         print(f"Cannot download {dataset_url}")
         if dataset_name in DATASETS:
             print("Creating dataset locally")
             DATASETS[dataset_name](hdf5_filename)
 
-    hdf5_file = h5py.File(hdf5_filename, "r")
+        hdf5_file = h5py.File(hdf5_filename, "r")
 
     # here for backward compatibility, to ensure old datasets can still be used with newer versions
     # cast to integer because the json parser (later on) cannot interpret numpy integers
@@ -95,6 +102,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
     new_train = train[new_train_indices]  
     
     # Randomly select elements from the new_train
+    # Note: The number of elements selected is the minimum between n_test_1_percent and the length of the filtered_test
     new_test_indices = numpy.random.choice(len(new_train),new_test_size, replace=False)
     new_test = new_train[new_test_indices]
 
