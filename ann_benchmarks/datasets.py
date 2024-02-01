@@ -60,8 +60,9 @@ def get_dataset(dataset_name: str) -> Tuple[h5py.File, int]:
             distance = hdf5_file.attrs["distance"]
 
         write_output(numpy.array(X_train), numpy.array(X_test), hdf5_filename, distance)
-        hdf5_file = h5py.File(hdf5_filename, "r")
         '''
+        hdf5_file = h5py.File(hdf5_filename, "r")
+        
     except:
         print(f"Cannot download {dataset_url}")
         if dataset_name in DATASETS:
