@@ -56,9 +56,9 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
         
         train = numpy.array(hdf5_file["train"])
         test = numpy.array(hdf5_file["test"])
-        point_type = hdf5_file.attrs["point_type"]
+        #point_type = hdf5_file.attrs["point_type"]
         distance = hdf5_file.attrs["distance"]
-    write_output(train, test, hdf5_filename, distance, point_type)
+    write_output(train, test, hdf5_filename, distance)
     hdf5_file = h5py.File(hdf5_filename, "r")   
 
  
