@@ -157,7 +157,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
 
     
    
-    new_train_size = 10000
+    new_train_size = 20000
     new_test_size = int(0.1 * new_train_size)
     # Randomly select new_train_size of elements from the train dataset
     new_train_indices = numpy.random.choice(n_train, new_train_size, replace=False)
