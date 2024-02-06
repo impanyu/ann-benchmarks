@@ -154,6 +154,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
     from ann_benchmarks.algorithms.bruteforce.module import BruteForceBLAS
     
     n_train = len(train)
+    print("train size: ", n_train)
 
     
    
