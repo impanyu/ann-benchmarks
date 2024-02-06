@@ -21,6 +21,19 @@ def download(source_url: str, destination_path: str) -> None:
         print(f"downloading {source_url} -> {destination_path}...")
         urlretrieve(source_url, destination_path)
 
+def download_outside_docker(source_url: str, destination_path: str) -> None:
+    """
+    Downloads a file from the provided source URL to the specified destination path
+    only if the file doesn't already exist at the destination.
+    
+    Args:
+        source_url (str): The URL of the file to download.
+        destination_path (str): The local path where the file should be saved.
+    """
+   
+    print(f"downloading {source_url} -> {destination_path}...")
+    urlretrieve(source_url, destination_path)
+
 
 def get_dataset_fn(dataset_name: str) -> str:
     """
@@ -69,7 +82,7 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
  
     try:
         dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
-        download(dataset_url, hdf5_filename)
+        download_outside_docker(dataset_url, hdf5_filename)
         
         with h5py.File(hdf5_filename, "r") as hdf5_file:
             
