@@ -7,7 +7,7 @@ import h5py
 import numpy
 from typing import Any, Callable, Dict, Tuple
 import os
-TRAIN_SIZE = 10000
+TRAIN_SIZE = 60000
 
 def download(source_url: str, destination_path: str) -> None:
     """
