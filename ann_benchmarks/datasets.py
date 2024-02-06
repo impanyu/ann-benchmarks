@@ -7,6 +7,7 @@ import h5py
 import numpy
 from typing import Any, Callable, Dict, Tuple
 import os
+TRAIN_SIZE = 10000
 
 def download(source_url: str, destination_path: str) -> None:
     """
@@ -20,20 +21,14 @@ def download(source_url: str, destination_path: str) -> None:
     if not os.path.exists(destination_path):
         print(f"downloading {source_url} -> {destination_path}...")
         urlretrieve(source_url, destination_path)
+    else:
+        with h5py.File(destination_path, "r") as hdf5_file:    
+            train = numpy.array(hdf5_file["train"])
+        if train.shape[0] != TRAIN_SIZE:
+            print(f"downloading {source_url} -> {destination_path}...")
+            urlretrieve(source_url, destination_path)
 
-def download_outside_docker(source_url: str, destination_path: str) -> None:
-    """
-    Downloads a file from the provided source URL to the specified destination path
-    only if the file doesn't already exist at the destination.
-    
-    Args:
-        source_url (str): The URL of the file to download.
-        destination_path (str): The local path where the file should be saved.
-    """
-   
-    print(f"downloading {source_url} -> {destination_path}...")
-    urlretrieve(source_url, destination_path)
-
+        
 
 def get_dataset_fn(dataset_name: str) -> str:
     """
@@ -82,7 +77,7 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
  
     try:
         dataset_url = f"https://ann-benchmarks.com/{dataset_name}.hdf5"
-        download_outside_docker(dataset_url, hdf5_filename)
+        download(dataset_url, hdf5_filename)
         
         with h5py.File(hdf5_filename, "r") as hdf5_file:
             
@@ -171,7 +166,7 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
 
     
    
-    new_train_size = 20000
+    new_train_size = TRAIN_SIZE
     new_test_size = int(0.1 * new_train_size)
     # Randomly select new_train_size of elements from the train dataset
     new_train_indices = numpy.random.choice(n_train, new_train_size, replace=False)
