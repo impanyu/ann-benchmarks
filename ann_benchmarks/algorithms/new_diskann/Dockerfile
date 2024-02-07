@@ -13,7 +13,7 @@ RUN  rm -rf /var/lib/apt/lists/*
 RUN pip3 install build
 
 
-RUN git clone https://github.com/microsoft/DiskANN.git
+RUN git clone --single-branch --branch new_diskann https://github.com/impanyu/high_order_DiskANN.git
 WORKDIR DiskANN
 RUN python3 -m build
 
