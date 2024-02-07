@@ -14,7 +14,7 @@ RUN pip3 install build
 
 
 RUN git clone --single-branch --branch new_diskann https://github.com/impanyu/high_order_DiskANN.git
-WORKDIR DiskANN
+WORKDIR high_order_DiskANN
 RUN python3 -m build
 
 
