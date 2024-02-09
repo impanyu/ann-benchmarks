@@ -14,9 +14,9 @@ class MST_Graph2(BaseANN):
         self.l_build = int(param["l_build"])
         self.max_outdegree = int(param["max_outdegree"])
         self.alphas = [float(alpha) for alpha in param["alphas"]] 
-        print("MST-Graph: L_Build = " + str(self.l_build))
-        print("MST-Graph: R = " + str(self.max_outdegree))
-        print("MST-Graph: Alpha = [{}]".format(','.join(map(str, self.alphas))))
+        print("MST-Graph2: L_Build = " + str(self.l_build))
+        print("MST-Graph2: R = " + str(self.max_outdegree))
+        print("MST-Graph2: Alpha = [{}]".format(','.join(map(str, self.alphas))))
 
         self.num_threads = 8
         
@@ -102,7 +102,7 @@ class MST_Graph2(BaseANN):
         def bin_to_float(binary):
             return struct.unpack("!f", struct.pack("!I", int(binary, 2)))[0]
 
-        print("MST-Graph: Starting Fit...")
+        print("MST-Graph2: Starting Fit...")
         index_dir = "indices"
 
         if not os.path.exists(index_dir):
@@ -110,10 +110,10 @@ class MST_Graph2(BaseANN):
 
         data_path = os.path.join(index_dir, "base.bin")
         #self.name = "Vamana-{}-{}-[{},{},{},{}]".format(self.l_build, self.max_outdegree, self.alphas[0],self.alphas[1],self.alphas[2],self.alphas[3])
-        self.name = "MST-Graph-{}-{}-[{}]".format(self.l_build, self.max_outdegree, ','.join(map(str, self.alphas)))
+        self.name = "MST-Graph2-{}-{}-[{}]".format(self.l_build, self.max_outdegree, ','.join(map(str, self.alphas)))
 
         save_path = os.path.join(index_dir, self.name)
-        print("MST-Graph: Index Stored At: " + save_path)
+        print("MST-Graph2: Index Stored At: " + save_path)
         shape = [
             np.float32(bin_to_float("{:032b}".format(X.shape[0]))),
             np.float32(bin_to_float("{:032b}".format(X.shape[1]))),
@@ -123,7 +123,7 @@ class MST_Graph2(BaseANN):
         X.tofile(data_path)
 
         if not os.path.exists(save_path):
-            print("MST-Graph: Creating Index")
+            print("MST-Graph2: Creating Index")
             s = time.time()
             if self.metric == "l2":
                 #index = vp.SinglePrecisionIndex(vp.Metric.FAST_L2, data_path)
@@ -132,36 +132,36 @@ class MST_Graph2(BaseANN):
                 self.index = self.build(self.metric, "float", self.alphas, index_dir, data_path,self.l_build, self.max_outdegree, self.num_threads, self.name)
           
             else:
-                print("MST-Graph: Unknown Metric Error!")
+                print("MST-Graph2: Unknown Metric Error!")
 
             
             #index.build(self.params, [])
             t = time.time()
-            print("MST-Graph: Index Build Time (sec) = " + str(t - s))
+            print("MST-Graph2: Index Build Time (sec) = " + str(t - s))
             #index.save(save_path)
 
         if os.path.exists(save_path):
-            print("MST-Graph: Loading Index: " + str(save_path))
+            print("MST-Graph2: Loading Index: " + str(save_path))
             s = time.time()
             if self.metric == "l2":
                 self.index = StaticMemoryIndex(distance_metric=self.metric,vector_dtype="float",index_directory=index_dir, num_threads=self.num_threads, initial_search_complexity=self.l_build,index_prefix=self.name)
             elif self.metric == "cosine":
                 self.index = StaticMemoryIndex(distance_metric=self.metric,vector_dtype="float",index_directory=index_dir, num_threads=self.num_threads, initial_search_complexity=self.l_build,index_prefix=self.name)
             else:
-                print("MST-Graph: Unknown Metric Error!")
+                print("MST-Graph2: Unknown Metric Error!")
             #self.index.load(file_name=save_path)
-            print("MST-Graph: Index Loaded")
+            print("MST-Graph2: Index Loaded")
             #self.index.optimize_graph()
             #print("Vamana: Graph Optimization Completed")
             t = time.time()
-            print("MST-Graph: Index Load Time (sec) = " + str(t - s))
+            print("MST-Graph2: Index Load Time (sec) = " + str(t - s))
         else:
-            print("MST-Graph: Unexpected Index Build Time Error")
+            print("MST-Graph2: Unexpected Index Build Time Error")
 
-        print("MST-Graph: End of Fit")
+        print("MST-Graph2: End of Fit")
 
     def set_query_arguments(self, l_search):
-        print("MST-Graph: L_Search = " + str(l_search))
+        print("MST-Graph2: L_Search = " + str(l_search))
         self.l_search = l_search
 
     def query(self, v, n):
