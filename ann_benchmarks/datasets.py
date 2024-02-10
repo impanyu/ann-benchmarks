@@ -7,7 +7,7 @@ import h5py
 import numpy
 from typing import Any, Callable, Dict, Tuple
 import os
-TRAIN_SIZE = 60000
+TRAIN_SIZE = 10000
 
 def download(source_url: str, destination_path: str) -> None:
     """
@@ -162,12 +162,14 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
     from ann_benchmarks.algorithms.bruteforce.module import BruteForceBLAS
     
     n_train = len(train)
+    n_test = len(test)
     print("train size: ", n_train)
+    print("test size: ", n_test)
 
     
    
     new_train_size = TRAIN_SIZE
-    new_test_size = int(0.1 * new_train_size)
+    new_test_size = int(new_train_size/n_train * n_test)
     # Randomly select new_train_size of elements from the train dataset
     new_train_indices = numpy.random.choice(n_train, new_train_size, replace=False)
     new_train_indices = numpy.sort(new_train_indices)
@@ -175,9 +177,9 @@ def write_output(train: numpy.ndarray, test: numpy.ndarray, fn: str, distance: s
     
     # Randomly select elements from the new_train
     # Note: The number of elements selected is the minimum between n_test_1_percent and the length of the filtered_test
-    new_test_indices = numpy.random.choice(len(new_train),new_test_size, replace=False)
+    new_test_indices = numpy.random.choice(n_test,new_test_size, replace=False)
     new_test_indices = numpy.sort(new_test_indices)
-    new_test = new_train[new_test_indices]
+    new_test = test[new_test_indices]
 
     train=new_train
     test=new_test
