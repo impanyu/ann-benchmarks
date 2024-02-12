@@ -85,13 +85,14 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
             test = numpy.array(hdf5_file["test"])
             
             distance = hdf5_file.attrs["distance"]
-
-        write_output(train, test, hdf5_filename_copy, distance)
-        # Move the file (equivalent to mv in Unix)
-        try:
-            os.rename(hdf5_filename_copy, hdf5_filename)
-        except OSError as e:
-            print(f"Error moving file: {e}")
+            
+        if train.shape[0] != TRAIN_SIZE:
+            write_output(train, test, hdf5_filename_copy, distance)
+            # Move the file (equivalent to mv in Unix)
+            try:
+                os.rename(hdf5_filename_copy, hdf5_filename)
+            except OSError as e:
+                print(f"Error moving file: {e}")
 
         hdf5_file = h5py.File(hdf5_filename, "r")            
     except:
