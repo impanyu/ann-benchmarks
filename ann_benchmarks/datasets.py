@@ -7,7 +7,8 @@ import h5py
 import numpy
 from typing import Any, Callable, Dict, Tuple
 import os
-TRAIN_SIZE = 10000
+TRAIN_SIZE = 100000
+
 
 def download(source_url: str, destination_path: str) -> None:
     """
@@ -85,7 +86,7 @@ def get_dataset_outside_docker(dataset_name: str) -> Tuple[h5py.File, int]:
             test = numpy.array(hdf5_file["test"])
             
             distance = hdf5_file.attrs["distance"]
-            
+
         if train.shape[0] != TRAIN_SIZE:
             write_output(train, test, hdf5_filename_copy, distance)
             # Move the file (equivalent to mv in Unix)
