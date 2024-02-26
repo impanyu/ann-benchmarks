@@ -22,7 +22,7 @@ RUN ldconfig
 RUN echo "MKL_THREADING_LAYER=GNU" >> /etc/environment
 
 RUN git clone --single-branch --branch python_bindings https://github.com/microsoft/diskann
-#COPY CMakeLists.txt diskann/CMakeLists.txt
+COPY CMakeLists.txt diskann/CMakeLists.txt
 RUN mkdir -p diskann/build
 RUN cd diskann/build && cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN cd diskann/build && make -j
