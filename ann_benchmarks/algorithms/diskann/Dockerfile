@@ -27,4 +27,4 @@ RUN mkdir -p diskann/build
 RUN cd diskann/build && cmake -DCMAKE_BUILD_TYPE=Release ..
 RUN cd diskann/build && make -j
 RUN cd diskann/python && pip install -e .
-RUN python3 -c 'import diskannpy'
+RUN python3 -c 'import vamanapy'
