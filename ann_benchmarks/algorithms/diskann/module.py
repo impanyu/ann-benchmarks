@@ -3,7 +3,7 @@ import struct
 import time
 
 import numpy as np
-import vamanapy as vp
+import diskannpy as vp
 
 from ..base.module import BaseANN
 
