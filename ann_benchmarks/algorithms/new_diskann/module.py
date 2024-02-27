@@ -152,6 +152,7 @@ class DiskANN(BaseANN):
             print("DiskANN: Index Loaded")
             #self.index.optimize_graph()
             #print("Vamana: Graph Optimization Completed")
+            self.index.optimize_index_layout()
             t = time.time()
             print("DiskANN: Index Load Time (sec) = " + str(t - s))
         else:
@@ -164,11 +165,11 @@ class DiskANN(BaseANN):
         self.l_search = l_search
 
     def query(self, v, n):
-        return self.index.search(v, n, self.l_search).identifiers
+        return self.index.search_with_optimized_layout(v, n, self.l_search).identifiers
 
     def batch_query(self, X, n):
         self.num_queries = X.shape[0]
-        self.result = self.index.batch_search(X, n,  self.l_search, self.num_threads).identifiers
+        self.result = self.index.batch_search_with_optimized_layout(X, n,  self.l_search, self.num_queries).identifiers
 
     def get_batch_results(self):
         return self.result
