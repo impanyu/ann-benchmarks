@@ -170,7 +170,7 @@ class MST_Graph(BaseANN):
 
     def batch_query(self, X, n):
         self.num_queries = X.shape[0]
-        self.result = self.index.batch_search_with_optimized_layout(X, n,  self.l_search, self.num_threads).identifiers
+        self.result = self.index.batch_search_with_optimized_layout(X, n,  self.l_search, self.num_queries).identifiers
 
     def get_batch_results(self):
         return self.result
