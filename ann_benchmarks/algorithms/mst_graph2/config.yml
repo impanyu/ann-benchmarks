@@ -35,7 +35,7 @@ float:
     module: ann_benchmarks.algorithms.mst_graph2
     name: mst_graph2
     run_groups:
-      mst_graph_100_64_[1,1.02]:
+      mst_graph_100_64_[1,1.05]:
         args: [{alphas: [1,1.02],  l_build: 100, max_outdegree: 64}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]   
     
