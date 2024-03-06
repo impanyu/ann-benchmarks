@@ -83,7 +83,7 @@ float:
         args: [{alphas: [1,2,2,-0.1], l_build: 125, max_outdegree: 32}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
       mst_graph_125_32_[1.1,2,2,-0.1]:
-        args: [{alphas: [1.1,2,5,-0.1], l_build: 125, max_outdegree: 32}]
+        args: [{alphas: [1.1,2,2,-0.1], l_build: 125, max_outdegree: 32}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
       mst_graph_125_32_[1.2,2,2,-0.1]:
         args: [{alphas: [1.2,2,2,-0.1], l_build: 125, max_outdegree: 32}]
