@@ -70,23 +70,23 @@ float:
     module: ann_benchmarks.algorithms.mst_graph
     name: mst_graph
     run_groups:
-      mst_graph_100_64_[1,2,2,0.3]:
-        args: [{alphas: [1,2,2,0.3],  l_build: 100, max_outdegree: 64}]
+      mst_graph_100_64_[1,5,2,0.3]:
+        args: [{alphas: [1,5,2,0.3],  l_build: 100, max_outdegree: 64}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]   
-      mst_graph_100_64_[1.1,2,2,0.3]:
-        args: [{alphas: [1.1,2,2,0.3], l_build: 100, max_outdegree: 64}]
+      mst_graph_100_64_[1.1,5,2,0.3]:
+        args: [{alphas: [1.1,5,2,0.3], l_build: 100, max_outdegree: 64}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_100_64_[1.2,2,2,0.3]:
-        args: [{alphas: [1.2,2,2,0.3], l_build: 100, max_outdegree: 64}]
+      mst_graph_100_64_[1.2,5,2,0.3]:
+        args: [{alphas: [1.2,5,2,0.3], l_build: 100, max_outdegree: 64}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_125_32_[1,2,2,0.3]:
-        args: [{alphas: [1,2,2,0.3], l_build: 125, max_outdegree: 32}]
+      mst_graph_125_32_[1,2,5,0.3]:
+        args: [{alphas: [1,2,5,0.3], l_build: 125, max_outdegree: 32}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_125_32_[1.1,2,2,0.3]:
-        args: [{alphas: [1.1,2,2,0.3], l_build: 125, max_outdegree: 32}]
+      mst_graph_125_32_[1.1,5,2,0.3]:
+        args: [{alphas: [1.1,5,2,0.3], l_build: 125, max_outdegree: 32}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_125_32_[1.2,2,2,0.3]:
-        args: [{alphas: [1.2,2,2,0.3], l_build: 125, max_outdegree: 32}]
+      mst_graph_125_32_[1.2,5,2,0.3]:
+        args: [{alphas: [1.2,5,2,0.3], l_build: 125, max_outdegree: 32}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
       mst_graph_100_64_[1,2,2,0.1]:
         args: [{alphas: [1,2,2,0.1],  l_build: 100, max_outdegree: 64}]
@@ -123,24 +123,6 @@ float:
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
       mst_graph_125_32_[1.2,2,2,-0.2]:
         args: [{alphas: [1.2,2,2,-0.2], l_build: 125, max_outdegree: 32}]
-        query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_100_64_[1,2,2,-0.3]:
-        args: [{alphas: [1,2,2,-0.3],  l_build: 100, max_outdegree: 64}]
-        query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]   
-      mst_graph_100_64_[1.1,2,2,-0.3]:
-        args: [{alphas: [1.1,2,2,-0.3], l_build: 100, max_outdegree: 64}]
-        query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_100_64_[1.2,2,2,-0.3]:
-        args: [{alphas: [1.2,2,2,-0.3], l_build: 100, max_outdegree: 64}]
-        query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_125_32_[1,2,2,-0.3]:
-        args: [{alphas: [1,2,2,-0.3], l_build: 125, max_outdegree: 32}]
-        query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_125_32_[1.1,2,2,-0.3]:
-        args: [{alphas: [1.1,2,2,-0.3], l_build: 125, max_outdegree: 32}]
-        query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
-      mst_graph_125_32_[1.2,2,2,-0.3]:
-        args: [{alphas: [1.2,2,2,-0.3], l_build: 125, max_outdegree: 32}]
         query_args: [[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]]
    
       
